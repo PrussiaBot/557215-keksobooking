@@ -1,7 +1,7 @@
 # Личный проект «Кексобукинг» [![Build status][travis-image]][travis-url]
 
 * Студент: [Юлия Ленская](https://up.htmlacademy.ru/javascript/14/user/557215).
-* Наставник: `Неизвестно`.
+* Наставник: [Птетька Волобуев].
 
 ---
 
