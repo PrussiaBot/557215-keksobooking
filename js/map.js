@@ -1,184 +1,68 @@
 'use strict';
-
-var apartmentsInformation = [
-  {
-    'author': {
-      'avatar': 'img/avatars/user01.png'
-    },
-    'offer': {
-      'title': 'Большая уютная квартира',
-      'address': '600, 350',
-      'price': 10000,
-      'type': 'flat',
-      'rooms': 3,
-      'guests': 7,
-      'checkin': '12:00',
-      'checkout': '13:00',
-      'features': ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg']
-    },
-    'location': {
-      'x': 600,
-      'y': 230
+var quantityApartament = 8;
+var apartamentsTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var randomNumber = function (min, max) {
+  var rand = min - 0.5 + Math.random() * (max - min + 1);
+  rand = Math.round(rand);
+  return rand;
+};
+var randomizeValue = function (quantity, apartmentsDescription) {
+  var randomApartmentsInformation = [];
+  for (var i = 0; i < quantity; i++) {
+    var randomType = randomNumber(1, 4);
+    if (randomType === 1) {
+      randomType = 'flat';
+    } else if (randomType === 2) {
+      randomType = 'place';
+    } else if (randomType === 3) {
+      randomType = 'house';
+    } else {
+      randomType = 'bungalo';
     }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user02.png'
-    },
-    'offer': {
-      'title': 'Маленькая неуютная квартира',
-      'address': '810, 580',
-      'price': 5000,
-      'type': 'flat',
-      'rooms': 1,
-      'guests': 1,
-      'checkin': '13:00',
-      'checkout': '12:00',
-      'features': ['parking', 'washer'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel1.jpg']
-    },
-    'location': {
-      'x': 800,
-      'y': 300
+    var randomRoom = randomNumber(1, 4);
+    if (randomRoom === 4) {
+      randomRoom = 100;
     }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user03.png'
-    },
-    'offer': {
-      'title': 'Огромный прекрасный дворец',
-      'address': '200, 450',
-      'price': 100000,
-      'type': 'place',
-      'rooms': 100,
-      'guests': 0,
-      'checkin': '14:00',
-      'checkout': '13:00',
-      'features': ['wifi', 'dishwasher', 'parking', 'washer', 'conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg']
-    },
-    'location': {
-      'x': 340,
-      'y': 180
+    var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+    var photoList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg'];
+    var featuresValue = [];
+    var featuresValueLength = randomNumber(1, 6);
+    var compareRandom = function () {
+      return Math.random() - 0.5;
+    };
+    featuresList.sort(compareRandom);
+    photoList.sort(compareRandom);
+    for (var j = 0; j < featuresValueLength; j++) {
+      featuresValue[j] = featuresList [j];
     }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user04.png'
-    },
-    'offer': {
-      'title': 'Маленький ужасный дворец',
-      'address': '700, 240',
-      'price': 50000,
-      'type': 'place',
-      'rooms': 3,
-      'guests': 5,
-      'checkin': '14:00',
-      'checkout': '14:00',
-      'features': ['wifi', 'parking', 'washer', 'conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg']
-    },
-    'location': {
-      'x': 800,
-      'y': 535
-    }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user05.png'
-    },
-    'offer': {
-      'title': 'Красивый гостевой домик',
-      'address': '350, 350',
-      'price': 15000,
-      'type': 'house',
-      'rooms': 3,
-      'guests': 7,
-      'checkin': '12:00',
-      'checkout': '14:00',
-      'features': ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg']
-    },
-    'location': {
-      'x': 600,
-      'y': 230
-    }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user06.png'
-    },
-    'offer': {
-      'title': 'Некрасивый негостеприимный домик',
-      'address': '800, 180',
-      'price': 5000,
-      'type': 'house',
-      'rooms': 2,
-      'guests': 5,
-      'checkin': '14:00',
-      'checkout': '12:00',
-      'features': ['wifi', 'parking'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel1.jpg']
-    },
-    'location': {
-      'x': 880,
-      'y': 430
-    }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user07.png'
-    },
-    'offer': {
-      'title': 'Уютное бунгало далеко от моря',
-      'address': '300, 750',
-      'price': 29000,
-      'type': 'bungalo',
-      'rooms': 3,
-      'guests': 7,
-      'checkin': '12:00',
-      'checkout': '13:00',
-      'features': ['wifi', 'dishwasher', 'washer', 'conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg']
-    },
-    'location': {
-      'x': 500,
-      'y': 590
-    }
-  },
-  {
-    'author': {
-      'avatar': 'img/avatars/user08.png'
-    },
-    'offer': {
-      'title': 'Неуютное бунгало по колено в воде',
-      'address': '100, 450',
-      'price': 1000,
-      'type': 'bungalo',
-      'rooms': 1,
-      'guests': 4,
-      'checkin': '14:00',
-      'checkout': '12:00',
-      'features': ['conditioner'],
-      'description': '',
-      'photos': ['http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel1.jpg']
-    },
-    'location': {
-      'x': 400,
-      'y': 330
-    }
+    var apartamentInformaton = {
+      'author': {
+        'avatar': 'img/avatars/user0' + randomNumber(1, quantity) + '.png'
+      },
+      'offer': {
+        'title': apartmentsDescription[randomNumber(100, 1000)],
+        'address': randomNumber(100, 1000) + ', ' + randomNumber(100, 1000),
+        'price': randomNumber(1000, 1000000),
+        'type': randomType,
+        'rooms': randomRoom,
+        'guests': randomNumber(0, 3),
+        'checkin': randomNumber(12, 14) + ':00',
+        'checkout': randomNumber(12, 14) + ':00',
+        'features': featuresValue,
+        'description': '',
+        'photos': photoList
+      },
+      'location': {
+        'x': randomNumber(300, 900),
+        'y': randomNumber(130, 160)
+      }
+    };
+    randomApartmentsInformation[i] = apartamentInformaton;
   }
-];
+  return randomApartmentsInformation;
+};
 
+var apartmentsInformation = randomizeValue(quantityApartament, apartamentsTitle);
 var templateOffer = document.querySelector('template');
 var templatePin = templateOffer.content.querySelector('.map__pin');
 var templatePopupPin = templateOffer.content.querySelector('.map__card');
@@ -197,7 +81,7 @@ for (var i = 0; i < apartmentsInformation.length; i++) {
   elementPinImg.alt = apartmentsInformation[i].offer.title;
   fragmentPin.appendChild(elementPin);
   popupPin.querySelector('.popup__title').textContent = apartmentsInformation[i].offer.title;
-  // popupPin.querySelector('.popup-text__address').textContent = apartmentInformation[i].offer.address;
+  popupPin.querySelector('.popup__text--address').textContent = apartmentsInformation[i].offer.address;
   popupPin.querySelector('.popup__text--price').innerHTML = apartmentsInformation[i].offer.price + ' ' + '&#x20bd;' + '<span>/ночь</span>';
   if (apartmentsInformation[i].offer.type === 'flat') {
     popupPin.querySelector('.popup__type').textContent = 'Квартира';
