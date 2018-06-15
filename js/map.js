@@ -40,7 +40,7 @@ var randomizeValue = function (quantity, apartmentsDescription) {
         'avatar': 'img/avatars/user0' + randomNumber(1, quantity) + '.png'
       },
       'offer': {
-        'title': apartmentsDescription[randomNumber(100, 1000)],
+        'title': apartmentsDescription[randomNumber(1, quantity)],
         'address': randomNumber(100, 1000) + ', ' + randomNumber(100, 1000),
         'price': randomNumber(1000, 1000000),
         'type': randomType,
@@ -61,8 +61,7 @@ var randomizeValue = function (quantity, apartmentsDescription) {
   }
   return randomApartmentsInformation;
 };
-
-var apartmentsInformation = randomizeValue(quantityApartament, apartamentsTitle);
+var apartmentsInformation = randomizeValue(quantityApartament, apartamentsTitle)
 var templateOffer = document.querySelector('template');
 var templatePin = templateOffer.content.querySelector('.map__pin');
 var templatePopupPin = templateOffer.content.querySelector('.map__card');
