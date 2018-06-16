@@ -61,7 +61,7 @@ var randomizeValue = function (quantity, apartmentsDescription) {
   }
   return randomApartmentsInformation;
 };
-var apartmentsInformation = randomizeValue(quantityApartament, apartamentsTitle)
+var apartmentsInformation = randomizeValue(quantityApartament, apartamentsTitle);
 var templateOffer = document.querySelector('template');
 var templatePin = templateOffer.content.querySelector('.map__pin');
 var templatePopupPin = templateOffer.content.querySelector('.map__card');
