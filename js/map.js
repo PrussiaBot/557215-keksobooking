@@ -40,7 +40,7 @@ var randomizeValue = function (quantity, apartmentsDescription) {
         'avatar': 'img/avatars/user0' + randomNumber(1, quantity) + '.png'
       },
       'offer': {
-        'title': apartmentsDescription[randomNumber(1, quantity)],
+        'title': apartmentsDescription[randomNumber(0, quantity-1)],
         'address': randomNumber(100, 1000) + ', ' + randomNumber(100, 1000),
         'price': randomNumber(1000, 1000000),
         'type': randomType,
