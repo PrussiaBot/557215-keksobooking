@@ -13,6 +13,7 @@ var TEMPLATE_OFFER = document.querySelector('template');
 var TEMPLATE_PIN = TEMPLATE_OFFER.content.querySelector('.map__pin');
 var TEMPLATE_POPUP_PIN = TEMPLATE_OFFER.content.querySelector('.map__card');
 
+// Взято из учебника learn.javascript (https://learn.javascript.ru/task/random-int-min-max)
 var randomNumber = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
@@ -176,8 +177,10 @@ var createPhoto = function (array, arrayPosition, element, className) {
 var createPin = function (arrayApartment, position) {
   var elementPin = TEMPLATE_PIN.cloneNode(true);
   var elementPinImg = elementPin.querySelector('img');
-  elementPin.style.left = arrayApartment[position].location.x + 'px';
-  elementPin.style.top = arrayApartment[position].location.y + 'px';
+  var pinHeight = elementPinImg.height;
+  var pinWidth = elementPinImg.width;
+  elementPin.style.left = (arrayApartment[position].location.x - pinWidth / 2) + 'px';
+  elementPin.style.top = (arrayApartment[position].location.y - pinHeight) + 'px';
   elementPinImg.src = arrayApartment[position].author.avatar;
   elementPinImg.alt = arrayApartment[position].offer.title;
   return elementPin;
