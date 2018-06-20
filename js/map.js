@@ -1,9 +1,18 @@
 'use strict';
 
-var quantityApartment = 8;
-var apartmentsTitle = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
-var featuresList = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
-var photoList = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg'];
+var QUANTITY_APARTMENT = 8;
+var APARTMENTS_TITLE = ['Большая уютная квартира', 'Маленькая неуютная квартира', 'Огромный прекрасный дворец', 'Маленький ужасный дворец', 'Красивый гостевой домик', 'Некрасивый негостеприимный домик', 'Уютное бунгало далеко от моря', 'Неуютное бунгало по колено в воде'];
+var FEATURES_LIST = ['wifi', 'dishwasher', 'parking', 'washer', 'elevator', 'conditioner'];
+var PHOTO_LIST = ['http://o0.github.io/assets/images/tokyo/hotel1.jpg', 'http://o0.github.io/assets/images/tokyo/hotel2.jpg', 'http://o0.github.io/assets/images/tokyo/hotel3.jpg'];
+var TYPES_TRANSLATE_MAP = {
+  'flat': 'Квартира',
+  'house': 'Дом',
+  'bungalo': 'Бунгало'
+};
+var TEMPLATE_OFFER = document.querySelector('template');
+var TEMPLATE_PIN = TEMPLATE_OFFER.content.querySelector('.map__pin');
+var TEMPLATE_POPUP_PIN = TEMPLATE_OFFER.content.querySelector('.map__card');
+
 var randomNumber = function (min, max) {
   var rand = min - 0.5 + Math.random() * (max - min + 1);
   rand = Math.round(rand);
@@ -81,9 +90,9 @@ var generationOffers = function (apartmentsDescription) {
       'guests': randomNumber(0, 3),
       'checkin': randomNumber(12, 14) + ':00',
       'checkout': randomNumber(12, 14) + ':00',
-      'features': generationRandomFeatures(featuresList, featuresList.length),
+      'features': generationRandomFeatures(FEATURES_LIST, FEATURES_LIST.length),
       'description': '',
-      'photos': mixingArrayMeanings(photoList)
+      'photos': mixingArrayMeanings(PHOTO_LIST)
     },
     'location': {
       'x': randomNumber(300, 900),
@@ -100,19 +109,16 @@ var generationAllOffers = function (quantity, apartmentsDescription) {
   return arrayOffers;
 };
 
-var apartmentsInformation = generationAllOffers(quantityApartment, apartmentsTitle);
-var templateOffer = document.querySelector('template');
-var templatePin = templateOffer.content.querySelector('.map__pin');
-var templatePopupPin = templateOffer.content.querySelector('.map__card');
+var apartmentsInformation = generationAllOffers(QUANTITY_APARTMENT, APARTMENTS_TITLE);
 var generationTypeName = function (array, arrayPosition) {
   if (array[arrayPosition].offer.type === 'flat') {
-    return 'Квартира';
+    return TYPES_TRANSLATE_MAP['flat'];
   } else if (array[arrayPosition].offer.type === 'place') {
-    return 'Дворец';
+    return TYPES_TRANSLATE_MAP['place'];
   } else if (array[arrayPosition].offer.type === 'house') {
-    return 'Дом';
+    return TYPES_TRANSLATE_MAP['house'];
   } else {
-    return 'Бунгало';
+    return TYPES_TRANSLATE_MAP['bungalo'];
   }
 };
 var generationRoomsEnding = function (array, arrayPosition) {
@@ -133,12 +139,12 @@ var generationGuestsEnding = function (array, arrayPosition) {
     return ' не для гостей';
   }
 };
-// var deleteChild = function (element, className){
-//   var parent = element.querySelector(className);
-//   while (parent.firstChild){
-//     parent.removeChild(parent.firstChild);
-//   }
-// }; Ошибка: Cannot read property 'lastChild' of null
+var deleteChild = function (element, className) {
+  var parent = element.querySelector(className);
+  while (parent.firstChild) {
+    parent.removeChild(parent.firstChild);
+  }
+};
 var createFeatures = function (array, arrayPosition, element, className) {
   for (var i = 0; i < array[arrayPosition].offer.features.length; i++) {
     var featuresElm = array[arrayPosition].offer.features[i];
@@ -158,17 +164,17 @@ var createFeatures = function (array, arrayPosition, element, className) {
     }
   }
 };
-// var createPhoto = function (array, arrayPosition, element, className) {
-//   var photoParent = element.querySelector(className);
-//   var photoElm = photoParent.querySelector('img').cloneNode();
-//   deleteChild(photoParent, className);
-//   for (i = 0; i < array[arrayPosition].offer.photos.length; i++) {
-//     var newPhotoElm = photoElm.cloneNode();
-//     return element.querySelector(className).appendChild(newPhotoElm).src = array[arrayPosition].offer.photos[i];
-//   }
-// } Не работает из-за отсутсвия функции deleteChild
+var createPhoto = function (array, arrayPosition, element, className) {
+  var parentPhoto = element.querySelector(className);
+  var photoElm = parentPhoto.querySelector('img').cloneNode();
+  deleteChild(element, className);
+  for (var i = 0; i < array[arrayPosition].offer.photos.length; i++) {
+    var newPhotoElm = photoElm.cloneNode();
+    element.querySelector(className).appendChild(newPhotoElm).src = array[arrayPosition].offer.photos[i];
+  }
+};
 var createPin = function (arrayApartment, position) {
-  var elementPin = templatePin.cloneNode(true);
+  var elementPin = TEMPLATE_PIN.cloneNode(true);
   var elementPinImg = elementPin.querySelector('img');
   elementPin.style.left = arrayApartment[position].location.x + 'px';
   elementPin.style.top = arrayApartment[position].location.y + 'px';
@@ -177,31 +183,17 @@ var createPin = function (arrayApartment, position) {
   return elementPin;
 };
 var createPopupPin = function (arrayApartment, position) {
-  var popupPin = templatePopupPin.cloneNode(true);
+  var popupPin = TEMPLATE_POPUP_PIN.cloneNode(true);
   popupPin.querySelector('.popup__title').textContent = arrayApartment[position].offer.title;
   popupPin.querySelector('.popup__text--address').textContent = arrayApartment[position].offer.address;
   popupPin.querySelector('.popup__text--price').innerHTML = arrayApartment[position].offer.price + ' ' + '&#x20bd;' + '<span>/ночь</span>';
   popupPin.querySelector('.popup__type').textContent = generationTypeName(arrayApartment, position);
   popupPin.querySelector('.popup__text--capacity').textContent = arrayApartment[position].offer.rooms + generationRoomsEnding(arrayApartment, position) + generationGuestsEnding(arrayApartment, position);
   popupPin.querySelector('.popup__text--time').textContent = 'Заезд после ' + arrayApartment[position].offer.checkin + ', выезд до ' + arrayApartment[position].offer.checkout;
-  // deleteChild(popupPin, '.popup__features');
-  var parent = popupPin.querySelector('.popup__features');
-  while (parent.firstChild) {
-    parent.removeChild(parent.firstChild);
-  }
+  deleteChild(popupPin, '.popup__features');
   createFeatures(arrayApartment, position, popupPin, '.popup__features');
   popupPin.querySelector('.popup__description').textContent = arrayApartment[position].offer.description;
-  // createPhoto(arrayApartment, position, popupPin, '.popup__photos');
-  var photoParent = popupPin.querySelector('.popup__photos');
-  var photoElm = photoParent.querySelector('img').cloneNode();
-  var parentPhoto = popupPin.querySelector('.popup__photos');
-  while (parentPhoto.firstChild) {
-    parentPhoto.removeChild(parentPhoto.firstChild);
-  }
-  for (var i = 0; i < arrayApartment[position].offer.photos.length; i++) {
-    var newPhotoElm = photoElm.cloneNode();
-    popupPin.querySelector('.popup__photos').appendChild(newPhotoElm).src = arrayApartment[position].offer.photos[i];
-  }
+  createPhoto(arrayApartment, position, popupPin, '.popup__photos');
   popupPin.querySelector('.popup__avatar').src = arrayApartment[position].author.avatar;
   return popupPin;
 };
