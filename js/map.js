@@ -97,7 +97,7 @@ var generationOffers = function (apartmentsDescription) {
     },
     'location': {
       'x': randomNumber(300, 900),
-      'y': randomNumber(130, 160)
+      'y': randomNumber(130, 630)
     }
   };
   return apartmentInformation;
@@ -215,5 +215,71 @@ var renderPopupPin = function (arrayApartment, classListElmAfter, classListParen
   document.querySelector(classListParent).insertBefore(popupPin, popupPinOnMap);
 };
 
-renderPin(apartmentsInformation, '.map__pins');
-renderPopupPin(apartmentsInformation, '.map__filters-container', '.map', 0);
+var MAP = document.querySelector('.map');
+var MAP_FORM = document.querySelector('.ad-form');
+var MAP_FORM_INPUT = MAP_FORM.querySelectorAll('input');
+var MAP_FORM_SELECT = MAP_FORM.querySelectorAll('select');
+var MAP_FORM_TEXTAREA = MAP_FORM.querySelectorAll('textarea');
+var MAIN_PIN_MUFFIN = document.querySelector('.map__pin--main');
+var FIELD_ADDRESS = document.getElementById('address');
+var disabledForm = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].setAttribute('disabled', 'disabled');
+  }
+};
+var formIncluded = function (array) {
+  for (var i = 0; i < array.length; i++) {
+    array[i].removeAttribute('disabled');
+  }
+};
+var showPopup = function (parentElement, element, position) {
+  var pin = element[position];
+  pin.name = position - 1;
+  pin.addEventListener('click', function () {
+    if (parentElement.querySelector('.map__card')) {
+      parentElement.querySelector('.map__card').remove();
+    }
+    renderPopupPin(apartmentsInformation, '.map__filters-container', '.map', pin.name);
+    var popupClose = MAP.querySelector('.popup__close');
+    popupClose.addEventListener('click', function () {
+      MAP.querySelector('.map__card').remove();
+    });
+  });
+};
+var generateCoordinatesMainPinOnStart = function (element, field) {
+  var posX = element.offsetTop;
+  var posY = element.offsetLeft;
+  var elmWidth = element.offsetWidth;
+  var elmHeight = element.offsetHeight;
+  field.value = (posX - elmWidth / 2) + ', ' + (posY - elmHeight / 2);
+};
+var generateCoordinatesMainPin = function (element, field) {
+  var posX = element.offsetTop;
+  var posY = element.offsetLeft;
+  var elmWidth = element.offsetWidth;
+  var elmHeight = element.offsetHeight;
+  field.value = (posX - elmWidth / 2) + ', ' + (posY - elmHeight);
+};
+var startKeks = function () {
+  MAP.classList.remove('map--faded');
+  MAP_FORM.classList.remove('ad-form--disabled');
+  formIncluded(MAP_FORM_INPUT);
+  formIncluded(MAP_FORM_SELECT);
+  formIncluded(MAP_FORM_TEXTAREA);
+  renderPin(apartmentsInformation, '.map__pins');
+  generateCoordinatesMainPinOnStart(MAIN_PIN_MUFFIN, FIELD_ADDRESS);
+  MAIN_PIN_MUFFIN.removeEventListener('mouseup', startKeks);
+  MAIN_PIN_MUFFIN.addEventListener('mouseup', function () {
+    generateCoordinatesMainPin(MAIN_PIN_MUFFIN, FIELD_ADDRESS);
+  });
+  var allPinsOnMap = document.querySelectorAll('.map__pin');
+  for (var i = 1; i < allPinsOnMap.length; i++) {
+    showPopup(MAP, allPinsOnMap, i);
+  }
+};
+MAP.classList.add('map--faded');
+MAP_FORM.classList.add('ad-form--disabled');
+disabledForm(MAP_FORM_INPUT);
+disabledForm(MAP_FORM_SELECT);
+disabledForm(MAP_FORM_TEXTAREA);
+MAIN_PIN_MUFFIN.addEventListener('mouseup', startKeks);
