@@ -225,6 +225,49 @@ var MAP_FORM_SELECT = MAP_FORM.querySelectorAll('select');
 var MAP_FORM_TEXTAREA = MAP_FORM.querySelectorAll('textarea');
 var MAIN_PIN_MUFFIN = document.querySelector('.map__pin--main');
 var FIELD_ADDRESS = document.getElementById('address');
+var FORM_SELECT_TYPE = document.getElementById('type');
+var FORM_SELECT_ROOM = document.getElementById('room_number');
+var FORM_SELECT_CAPACITY = document.getElementById('capacity');
+var FORM_FIELD_PRICE = document.getElementById('price');
+var capacityOptions = FORM_SELECT_CAPACITY.querySelectorAll('option');
+var selectedOptionPrice = function () {
+  if (FORM_SELECT_TYPE.selectedIndex === 0){
+    FORM_FIELD_PRICE.min = 0;
+    FORM_FIELD_PRICE.placeholder = 0;
+  } else if (FORM_SELECT_TYPE.selectedIndex === 1){
+    FORM_FIELD_PRICE.min = 1000;
+    FORM_FIELD_PRICE.placeholder = 1000;
+  } else if (FORM_SELECT_TYPE.selectedIndex === 2) {
+    FORM_FIELD_PRICE.min = 5000;
+    FORM_FIELD_PRICE.placeholder = 5000;
+  } else {
+    FORM_FIELD_PRICE.min = 10000;
+    FORM_FIELD_PRICE.placeholder = 10000;
+  }
+};
+var selectedOptionRoom = function () {
+  if(FORM_SELECT_ROOM.selectedIndex === 0){
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].setAttribute('disabled', 'disabled');
+    capacityOptions[2].removeAttribute('disabled')
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else if (FORM_SELECT_ROOM.selectedIndex === 1) {
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].removeAttribute('disabled');
+    capacityOptions[2].removeAttribute('disabled');
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else if (FORM_SELECT_ROOM.selectedIndex === 2) {
+    capacityOptions[0].removeAttribute('disabled');
+    capacityOptions[1].removeAttribute('disabled');
+    capacityOptions[2].removeAttribute('disabled');
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else {
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].setAttribute('disabled', 'disabled');
+    capacityOptions[2].setAttribute('disabled', 'disabled');
+    capacityOptions[3].removeAttribute('disabled');
+  }
+};
 var disabledForm = function (array) {
   for (var i = 0; i < array.length; i++) {
     array[i].setAttribute('disabled', 'disabled');
@@ -286,3 +329,9 @@ disabledForm(MAP_FORM_INPUT);
 disabledForm(MAP_FORM_SELECT);
 disabledForm(MAP_FORM_TEXTAREA);
 MAIN_PIN_MUFFIN.addEventListener('mouseup', startKeks);
+MAP_FORM.onchange = function(e) {
+  this.timein.value = e.target.value;
+  this.timeout.value = e.target.value;
+};
+
+
