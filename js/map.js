@@ -181,8 +181,8 @@ var createPhoto = function (array, arrayPosition, element, className) {
 var createPin = function (arrayApartment, position) {
   var elementPin = TEMPLATE_PIN.cloneNode(true);
   var elementPinImg = elementPin.querySelector('img');
-  var pinHeight = elementPinImg.height;
-  var pinWidth = elementPinImg.width;
+  var pinHeight = elementPinImg.offsetHeight;
+  var pinWidth = elementPinImg.offsetWidth;
   elementPin.style.left = (arrayApartment[position].location.x - pinWidth / 2) + 'px';
   elementPin.style.top = (arrayApartment[position].location.y - pinHeight) + 'px';
   elementPinImg.src = arrayApartment[position].author.avatar;
@@ -220,7 +220,7 @@ var renderPopupPin = function (arrayApartment, classListElmAfter, classListParen
 };
 
 var MAP_FORM = document.querySelector('.ad-form');
-var MAP_FORM_INPUT = MAP_FORM.querySelectorAll('input');
+var MAP_FORM_INPUTS = MAP_FORM.querySelectorAll('input');
 var MAP_FORM_SELECT = MAP_FORM.querySelectorAll('select');
 var MAP_FORM_TEXTAREA = MAP_FORM.querySelectorAll('textarea');
 var MAIN_PIN_MUFFIN = document.querySelector('.map__pin--main');
@@ -337,7 +337,7 @@ var generateCoordinatesMainPin = function (element, field) {
 var startKeks = function () {
   MAP.classList.remove('map--faded');
   MAP_FORM.classList.remove('ad-form--disabled');
-  formIncluded(MAP_FORM_INPUT);
+  formIncluded(MAP_FORM_INPUTS);
   formIncluded(MAP_FORM_SELECT);
   formIncluded(MAP_FORM_TEXTAREA);
   renderPin(apartmentsInformation, '.map__pins');
@@ -353,7 +353,7 @@ var startKeks = function () {
 };
 MAP.classList.add('map--faded');
 MAP_FORM.classList.add('ad-form--disabled');
-disabledForm(MAP_FORM_INPUT);
+disabledForm(MAP_FORM_INPUTS);
 disabledForm(MAP_FORM_SELECT);
 disabledForm(MAP_FORM_TEXTAREA);
 MAIN_PIN_MUFFIN.addEventListener('mouseup', startKeks);
