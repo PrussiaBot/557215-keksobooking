@@ -181,8 +181,8 @@ var createPhoto = function (array, arrayPosition, element, className) {
 var createPin = function (arrayApartment, position) {
   var elementPin = TEMPLATE_PIN.cloneNode(true);
   var elementPinImg = elementPin.querySelector('img');
-  var pinHeight = elementPinImg.height;
-  var pinWidth = elementPinImg.width;
+  var pinHeight = elementPinImg.offsetHeight;
+  var pinWidth = elementPinImg.offsetWidth;
   elementPin.style.left = (arrayApartment[position].location.x - pinWidth / 2) + 'px';
   elementPin.style.top = (arrayApartment[position].location.y - pinHeight) + 'px';
   elementPinImg.src = arrayApartment[position].author.avatar;
@@ -220,11 +220,82 @@ var renderPopupPin = function (arrayApartment, classListElmAfter, classListParen
 };
 
 var MAP_FORM = document.querySelector('.ad-form');
-var MAP_FORM_INPUT = MAP_FORM.querySelectorAll('input');
+var MAP_FORM_INPUTS = MAP_FORM.querySelectorAll('input');
 var MAP_FORM_SELECT = MAP_FORM.querySelectorAll('select');
 var MAP_FORM_TEXTAREA = MAP_FORM.querySelectorAll('textarea');
 var MAIN_PIN_MUFFIN = document.querySelector('.map__pin--main');
 var FIELD_ADDRESS = document.getElementById('address');
+var FORM_SELECT_TYPE = document.getElementById('type');
+var FORM_SELECT_ROOM = document.getElementById('room_number');
+var FORM_SELECT_CAPACITY = document.getElementById('capacity');
+var FORM_SELECT_TIMEIN = document.getElementById('timein');
+var FORM_SELECT_TIMEOUT = document.getElementById('timeout');
+var FORM_FIELD_PRICE = document.getElementById('price');
+var capacityOptions = FORM_SELECT_CAPACITY.querySelectorAll('option');
+var timeinOptions = FORM_SELECT_TIMEIN.querySelectorAll('option');
+var timeoutOptions = FORM_SELECT_TIMEOUT.querySelectorAll('option');
+var selectedOptionPrice = function () {
+  if (FORM_SELECT_TYPE.selectedIndex === 0) {
+    FORM_FIELD_PRICE.min = 0;
+    FORM_FIELD_PRICE.placeholder = 0;
+  } else if (FORM_SELECT_TYPE.selectedIndex === 1) {
+    FORM_FIELD_PRICE.min = 1000;
+    FORM_FIELD_PRICE.placeholder = 1000;
+  } else if (FORM_SELECT_TYPE.selectedIndex === 2) {
+    FORM_FIELD_PRICE.min = 5000;
+    FORM_FIELD_PRICE.placeholder = 5000;
+  } else {
+    FORM_FIELD_PRICE.min = 10000;
+    FORM_FIELD_PRICE.placeholder = 10000;
+  }
+};
+var selectedOptionRoom = function () {
+  if (FORM_SELECT_ROOM.selectedIndex === 0) {
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].setAttribute('disabled', 'disabled');
+    capacityOptions[2].removeAttribute('disabled');
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else if (FORM_SELECT_ROOM.selectedIndex === 1) {
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].removeAttribute('disabled');
+    capacityOptions[2].removeAttribute('disabled');
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else if (FORM_SELECT_ROOM.selectedIndex === 2) {
+    capacityOptions[0].removeAttribute('disabled');
+    capacityOptions[1].removeAttribute('disabled');
+    capacityOptions[2].removeAttribute('disabled');
+    capacityOptions[3].setAttribute('disabled', 'disabled');
+  } else {
+    capacityOptions[0].setAttribute('disabled', 'disabled');
+    capacityOptions[1].setAttribute('disabled', 'disabled');
+    capacityOptions[2].setAttribute('disabled', 'disabled');
+    capacityOptions[3].removeAttribute('disabled');
+  }
+};
+var selectedTimein = function () {
+  for (var i = 0; i < timeoutOptions; i++) {
+    timeoutOptions.removeAttribute('selected');
+  }
+  if (FORM_SELECT_TIMEIN.selectedIndex === 0) {
+    timeoutOptions[0].setAttribute('selected', 'selected');
+  } else if (FORM_SELECT_TIMEIN.selectedIndex === 1) {
+    timeoutOptions[1].setAttribute('selected', 'selected');
+  } else {
+    timeoutOptions[2].setAttribute('selected', 'selected');
+  }
+};
+var selectedTimeout = function () {
+  for (var i = 0; i < timeinOptions; i++) {
+    timeinOptions.removeAttribute('selected');
+  }
+  if (FORM_SELECT_TIMEOUT.selectedIndex === 0) {
+    timeinOptions[0].setAttribute('selected', 'selected');
+  } else if (FORM_SELECT_TIMEOUT.selectedIndex === 1) {
+    timeinOptions[1].setAttribute('selected', 'selected');
+  } else {
+    timeinOptions[2].setAttribute('selected', 'selected');
+  }
+};
 var disabledForm = function (array) {
   for (var i = 0; i < array.length; i++) {
     array[i].setAttribute('disabled', 'disabled');
@@ -266,7 +337,7 @@ var generateCoordinatesMainPin = function (element, field) {
 var startKeks = function () {
   MAP.classList.remove('map--faded');
   MAP_FORM.classList.remove('ad-form--disabled');
-  formIncluded(MAP_FORM_INPUT);
+  formIncluded(MAP_FORM_INPUTS);
   formIncluded(MAP_FORM_SELECT);
   formIncluded(MAP_FORM_TEXTAREA);
   renderPin(apartmentsInformation, '.map__pins');
@@ -282,7 +353,13 @@ var startKeks = function () {
 };
 MAP.classList.add('map--faded');
 MAP_FORM.classList.add('ad-form--disabled');
-disabledForm(MAP_FORM_INPUT);
+disabledForm(MAP_FORM_INPUTS);
 disabledForm(MAP_FORM_SELECT);
 disabledForm(MAP_FORM_TEXTAREA);
 MAIN_PIN_MUFFIN.addEventListener('mouseup', startKeks);
+FORM_SELECT_TIMEIN.addEventListener('change', selectedTimein);
+FORM_SELECT_TIMEOUT.addEventListener('change', selectedTimeout);
+FORM_SELECT_TYPE.addEventListener('change', selectedOptionPrice);
+FORM_SELECT_ROOM.addEventListener('change', selectedOptionRoom);
+
+
