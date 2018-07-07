@@ -356,6 +356,40 @@ MAP_FORM.classList.add('ad-form--disabled');
 disabledForm(MAP_FORM_INPUTS);
 disabledForm(MAP_FORM_SELECT);
 disabledForm(MAP_FORM_TEXTAREA);
+
+MAIN_PIN_MUFFIN.addEventListener('mousedown', function (evt) {
+  evt.preventDefault();
+
+  var startCoords = {
+    x: evt.clientX,
+    y: evt.clientY
+  };
+  var onMouseMove = function (moveEvt) {
+    moveEvt.preventDefault();
+
+    var shift = {
+      x: startCoords.x - moveEvt.clientX,
+      y: startCoords.y - moveEvt.clientY
+    };
+
+    startCoords = {
+      x: moveEvt.clientX,
+      y: moveEvt.clientY
+    };
+
+    MAIN_PIN_MUFFIN.style.top = (MAIN_PIN_MUFFIN.offsetTop - shift.y) + 'px';
+    MAIN_PIN_MUFFIN.style.left = (MAIN_PIN_MUFFIN.offsetLeft - shift.x) + 'px';
+  };
+  var onMouseUp = function (upEvt) {
+    upEvt.preventDefault();
+
+    MAP.removeEventListener('mousemove', onMouseMove);
+    MAP.removeEventListener('mouseup', onMouseUp);
+  };
+
+  MAP.addEventListener('mousemove', onMouseMove);
+  MAP.addEventListener('mouseup', onMouseUp);
+});
 MAIN_PIN_MUFFIN.addEventListener('mouseup', startKeks);
 FORM_SELECT_TIMEIN.addEventListener('change', selectedTimein);
 FORM_SELECT_TIMEOUT.addEventListener('change', selectedTimeout);
